@@ -1,22 +1,11 @@
 const root = document.getElementById('root');
 
-const leftCard = document.createElement('div');
-leftCard.classList.add('card')
-
-const headerCard = document.createElement('div');
-headerCard.classList.add('header-card');
+const Header = document.createElement('header');
 
 const Title = document.createElement('h1');
 Title.innerText = 'Consultar CEP';
 
-headerCard.appendChild(Title)
-leftCard.appendChild(headerCard);
-
-const containerSearch = document.createElement('div');
-containerSearch.classList.add('container-search');
-
-const labelInput = document.createElement('label');
-labelInput.innerText = 'CEP:'
+Header.appendChild(Title);
 
 const inputSearch = document.createElement('input');
 inputSearch.name = 'CEP';
@@ -24,20 +13,25 @@ inputSearch.id = 'CEP';
 inputSearch.placeholder = 'Digite seu cep';
 inputSearch.addEventListener('keyup', cepFormatter);
 
-containerSearch.appendChild(labelInput)
-containerSearch.appendChild(inputSearch)
+const ButtonSubmit = document.createElement('button');
+ButtonSubmit.innerText = 'Consultar'
 
-const RightCard = document.createElement('div');
-RightCard.classList.add('card')
+const buttonNewSearch = document.createElement('button');
+buttonNewSearch.innerText = 'Fazer nova consulta'
+buttonNewSearch.id = 'btn-new-search';
 
-const headerRightCard = document.createElement('div');
-headerRightCard.classList.add('header-card');
+const Card = document.createElement('div');
+Card.classList.add('card')
 
-const titleRightCard = document.createElement('h1');
-titleRightCard.innerText = 'Endereço completo';
+const headerCard = document.createElement('div');
+headerCard.classList.add('header-card');
 
-headerRightCard.appendChild(titleRightCard)
-RightCard.appendChild(headerRightCard)
+const titleCard = document.createElement('h1');
+titleCard.innerText = 'Endereço completo';
+
+headerCard.appendChild(titleCard)
+headerCard.appendChild(buttonNewSearch)
+Card.appendChild(headerCard)
 
 const contentCard = document.createElement('div');
 contentCard.classList.add("content-card");
@@ -57,32 +51,47 @@ function consult() {
     
         const spanBairro = document.createElement('span');
         spanBairro.innerHTML = `<strong>Bairro: </strong> ${data.bairro}`;
-        RightCard.appendChild(spanBairro);
+        contentCard.appendChild(spanBairro);
 
         const spanCep = document.createElement('span');
         spanCep.innerHTML = `<strong>CEP: </strong> ${data.cep}`;
-        RightCard.appendChild(spanCep);
+        contentCard.appendChild(spanCep);
 
         const spanCidade = document.createElement('span');
         spanCidade.innerHTML = `<strong>Cidade: </strong> ${data.localidade}`;
-        RightCard.appendChild(spanCidade);
-
-        const spanLogradouro = document.createElement('span');
-        spanLogradouro.innerHTML = `<strong>Logradouro: </strong> ${data.logradouro}`;
-        RightCard.appendChild(spanLogradouro);
+        contentCard.appendChild(spanCidade);
 
         const spanUf = document.createElement('span');
         spanUf.innerHTML = `<strong>UF: </strong> ${data.uf}`;
-        RightCard.appendChild(spanUf);
+        contentCard.appendChild(spanUf);
 
-        root.appendChild(RightCard);
+        const spanLogradouro = document.createElement('span');
+        spanLogradouro.innerHTML = `<strong>Logradouro: </strong> ${data.logradouro}`;
+        contentCard.appendChild(spanLogradouro);
+
+        if (data.complemento) {
+            const spanComplemento = document.createElement('span');
+            spanComplemento.innerHTML = `<strong>Complemento: </strong> ${data.complemento}`;
+            contentCard.appendChild(spanComplemento);
+        } else {
+            spanLogradouro.classList.add("last-item-grid");
+        }
+
+        Card.appendChild(contentCard);  
+        root.appendChild(Card);
     })
+
+    ButtonSubmit.disabled = true;
+    ButtonSubmit.style.opacity = '0.5';
 }
 
-const ButtonSubmit = document.createElement('button');
-ButtonSubmit.innerText = 'Consultar'
-ButtonSubmit.onclick = consult;
+function reloadPage() {
+    window.location.reload();
+}
 
-leftCard.appendChild(containerSearch);
-leftCard.appendChild(ButtonSubmit);
-root.appendChild(leftCard);
+ButtonSubmit.onclick = consult;
+buttonNewSearch.onclick = reloadPage;
+
+Header.appendChild(inputSearch);
+Header.appendChild(ButtonSubmit);
+root.appendChild(Header);
