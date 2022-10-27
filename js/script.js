@@ -48,7 +48,13 @@ function consult() {
     fetch(`https://viacep.com.br/ws/${cep}/json/`)
     .then(response => response.json())
     .then(data => {
-    
+        if (data.erro) {
+            showMessage('error');
+            return false;
+        }
+        
+        showMessage('success');
+
         const spanBairro = document.createElement('span');
         spanBairro.innerHTML = `<strong>Bairro: </strong> ${data.bairro}`;
         contentCard.appendChild(spanBairro);
@@ -79,14 +85,34 @@ function consult() {
 
         Card.appendChild(contentCard);  
         root.appendChild(Card);
-    })
 
-    ButtonSubmit.disabled = true;
-    ButtonSubmit.style.opacity = '0.5';
+        ButtonSubmit.disabled = true;
+        ButtonSubmit.style.opacity = '0.5';
+    });
+
 }
 
 function reloadPage() {
     window.location.reload();
+}
+
+function showMessage(typeMessage) {
+    const message = document.createElement('span');
+    message.classList.add('message');
+
+    if(typeMessage == 'success') {
+        message.innerText = 'Busca realizada com sucesso !';
+        message.style.background = '#04AA6D';
+        Header.appendChild(message);
+    }else {
+        message.innerText = 'CEP não encontrado !';
+        message.style.background = '#f44336';
+        Header.appendChild(message);
+    }
+
+    setTimeout(() => {
+        message.style.display = 'none';
+    }, 3000)
 }
 
 ButtonSubmit.onclick = consult;
